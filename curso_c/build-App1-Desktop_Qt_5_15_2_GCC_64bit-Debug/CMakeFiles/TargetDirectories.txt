@@ -1,0 +1,9 @@
+/home/fernando/Documentos/ejercicios/curso_c/build-App1-Desktop_Qt_5_15_2_GCC_64bit-Debug/CMakeFiles/App1.dir
+/home/fernando/Documentos/ejercicios/curso_c/build-App1-Desktop_Qt_5_15_2_GCC_64bit-Debug/CMakeFiles/edit_cache.dir
+/home/fernando/Documentos/ejercicios/curso_c/build-App1-Desktop_Qt_5_15_2_GCC_64bit-Debug/CMakeFiles/rebuild_cache.dir
+/home/fernando/Documentos/ejercicios/curso_c/build-App1-Desktop_Qt_5_15_2_GCC_64bit-Debug/CMakeFiles/list_install_components.dir
+/home/fernando/Documentos/ejercicios/curso_c/build-App1-Desktop_Qt_5_15_2_GCC_64bit-Debug/CMakeFiles/install.dir
+/home/fernando/Documentos/ejercicios/curso_c/build-App1-Desktop_Qt_5_15_2_GCC_64bit-Debug/CMakeFiles/install/local.dir
+/home/fernando/Documentos/ejercicios/curso_c/build-App1-Desktop_Qt_5_15_2_GCC_64bit-Debug/CMakeFiles/install/strip.dir
+/home/fernando/Documentos/ejercicios/curso_c/build-App1-Desktop_Qt_5_15_2_GCC_64bit-Debug/CMakeFiles/App1_autogen_timestamp_deps.dir
+/home/fernando/Documentos/ejercicios/curso_c/build-App1-Desktop_Qt_5_15_2_GCC_64bit-Debug/CMakeFiles/App1_autogen.dir
