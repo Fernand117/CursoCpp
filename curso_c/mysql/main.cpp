@@ -1,12 +1,14 @@
 #include <iostream>
 #include "MysqlConn.h"
 
+using namespace std;
+
 int main()
 {
     MYSQL_RES *res;
     MYSQL_ROW row;
 
-    res = mysql_perform_query(getConnectionResult(), "select * from usuarios");
+    /*res = mysql_perform_query(getConnectionResult(), "select * from usuarios");
 
     std::cout << "Tablas en la base de datos:\n" << std::endl;
     std::cout << "ID" << "  +  " << "Usuario" << std::endl;
@@ -16,7 +18,10 @@ int main()
     }
     
     mysql_free_result(res);
-    mysql_close(getConnectionResult());
+    mysql_close(getConnectionResult());*/
+
+    printf("Bienvenido al sistema de gestión DBZ\n");
+    printf("Selecciona una opción para continuar...\n");
 
     return 0;
 }
