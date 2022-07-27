@@ -35,6 +35,7 @@ public:
     QLineEdit *txtPassword;
     QPushButton *btnIniciar;
     QLabel *lbResult;
+    QPushButton *btnRegistrar;
     QMenuBar *menubar;
     QMenu *menuOpciones;
     QStatusBar *statusbar;
@@ -44,6 +45,8 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->resize(320, 355);
+        MainWindow->setMinimumSize(QSize(320, 355));
+        MainWindow->setMaximumSize(QSize(320, 355));
         actionSalir = new QAction(MainWindow);
         actionSalir->setObjectName(QString::fromUtf8("actionSalir"));
         centralwidget = new QWidget(MainWindow);
@@ -71,6 +74,9 @@ public:
         lbResult = new QLabel(centralwidget);
         lbResult->setObjectName(QString::fromUtf8("lbResult"));
         lbResult->setGeometry(QRect(10, 210, 291, 101));
+        btnRegistrar = new QPushButton(centralwidget);
+        btnRegistrar->setObjectName(QString::fromUtf8("btnRegistrar"));
+        btnRegistrar->setGeometry(QRect(130, 170, 80, 22));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -92,13 +98,14 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
+        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "Sistema", nullptr));
         actionSalir->setText(QCoreApplication::translate("MainWindow", "Salir", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p>Bienvenido</p><p>Inicia sesi\303\263n para continuar</p></body></html>", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "Usuario", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "Password", nullptr));
         btnIniciar->setText(QCoreApplication::translate("MainWindow", "Iniciar", nullptr));
         lbResult->setText(QCoreApplication::translate("MainWindow", "Result:", nullptr));
+        btnRegistrar->setText(QCoreApplication::translate("MainWindow", "Registrar", nullptr));
         menuOpciones->setTitle(QCoreApplication::translate("MainWindow", "Opciones", nullptr));
     } // retranslateUi
 

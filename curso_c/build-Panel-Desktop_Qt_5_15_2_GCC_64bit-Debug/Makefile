@@ -14,10 +14,10 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -g -std=gnu++1z -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../Panel -I. -I/usr/include/mysql -I/home/fernando/Qt/5.15.2/gcc_64/include -I/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets -I/home/fernando/Qt/5.15.2/gcc_64/include/QtGui -I/home/fernando/Qt/5.15.2/gcc_64/include/QtCore -I. -I/usr/include/libdrm -I. -I/home/fernando/Qt/5.15.2/gcc_64/mkspecs/linux-g++
+INCPATH       = -I../Panel -I. -I/usr/include/mysql -I/home/fernando/Qt/5.15.2/gcc_64/include -I/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets -I/home/fernando/Qt/5.15.2/gcc_64/include/QtGui -I/home/fernando/Qt/5.15.2/gcc_64/include/QtSql -I/home/fernando/Qt/5.15.2/gcc_64/include/QtCore -I. -I/usr/include/libdrm -I. -I/home/fernando/Qt/5.15.2/gcc_64/mkspecs/linux-g++
 QMAKE         = /home/fernando/Qt/5.15.2/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -40,7 +40,7 @@ DISTNAME      = Panel1.0.0
 DISTDIR = /home/fernando/Documentos/GitHub/CursoCpp/curso_c/build-Panel-Desktop_Qt_5_15_2_GCC_64bit-Debug/.tmp/Panel1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/home/fernando/Qt/5.15.2/gcc_64/lib
-LIBS          = $(SUBLIBS) -lmariadb /home/fernando/Qt/5.15.2/gcc_64/lib/libQt5Widgets.so /home/fernando/Qt/5.15.2/gcc_64/lib/libQt5Gui.so /home/fernando/Qt/5.15.2/gcc_64/lib/libQt5Core.so -lGL -lpthread   
+LIBS          = $(SUBLIBS) -lmariadb /home/fernando/Qt/5.15.2/gcc_64/lib/libQt5Widgets.so /home/fernando/Qt/5.15.2/gcc_64/lib/libQt5Gui.so /home/fernando/Qt/5.15.2/gcc_64/lib/libQt5Sql.so /home/fernando/Qt/5.15.2/gcc_64/lib/libQt5Core.so -lGL -lpthread   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -53,12 +53,16 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../Panel/main.cpp \
-		../Panel/mainwindow.cpp qrc_qmake_qmake_qm_files.cpp \
-		moc_mainwindow.cpp
+		../Panel/mainwindow.cpp \
+		../Panel/registrousuarios.cpp qrc_qmake_qmake_qm_files.cpp \
+		moc_mainwindow.cpp \
+		moc_registrousuarios.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
+		registrousuarios.o \
 		qrc_qmake_qmake_qm_files.o \
-		moc_mainwindow.o
+		moc_mainwindow.o \
+		moc_registrousuarios.o
 DIST          = /home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/fernando/Qt/5.15.2/gcc_64/mkspecs/common/unix.conf \
 		/home/fernando/Qt/5.15.2/gcc_64/mkspecs/common/linux.conf \
@@ -249,6 +253,7 @@ DIST          = /home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/qt_config.prf \
 		/home/fernando/Qt/5.15.2/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/spec_post.prf \
+		../Panel/.qmake.stash \
 		/home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/toolchain.prf \
 		/home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/default_pre.prf \
@@ -270,9 +275,12 @@ DIST          = /home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/exceptions.prf \
 		/home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/yacc.prf \
 		/home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/lex.prf \
-		../Panel/Panel.pro ../Panel/MySqlConnection.h \
-		../Panel/mainwindow.h ../Panel/main.cpp \
-		../Panel/mainwindow.cpp
+		../Panel/Panel.pro ../Panel/QPgSqlConn.h \
+		../Panel/UsuariosModel.h \
+		../Panel/mainwindow.h \
+		../Panel/registrousuarios.h ../Panel/main.cpp \
+		../Panel/mainwindow.cpp \
+		../Panel/registrousuarios.cpp
 QMAKE_TARGET  = Panel
 DESTDIR       = 
 TARGET        = Panel
@@ -281,7 +289,7 @@ TARGET        = Panel
 first: all
 ####### Build rules
 
-Panel: ui_mainwindow.h $(OBJECTS)  
+Panel: ui_mainwindow.h ui_registrousuarios.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: ../Panel/Panel.pro /home/fernando/Qt/5.15.2/gcc_64/mkspecs/linux-g++/qmake.conf /home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/spec_pre.prf \
@@ -474,6 +482,7 @@ Makefile: ../Panel/Panel.pro /home/fernando/Qt/5.15.2/gcc_64/mkspecs/linux-g++/q
 		/home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/qt_config.prf \
 		/home/fernando/Qt/5.15.2/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/toolchain.prf \
 		/home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/default_pre.prf \
@@ -688,6 +697,7 @@ Makefile: ../Panel/Panel.pro /home/fernando/Qt/5.15.2/gcc_64/mkspecs/linux-g++/q
 /home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/qt_config.prf:
 /home/fernando/Qt/5.15.2/gcc_64/mkspecs/linux-g++/qmake.conf:
 /home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/exclusive_builds.prf:
 /home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/toolchain.prf:
 /home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/default_pre.prf:
@@ -728,9 +738,9 @@ distdir: FORCE
 	$(COPY_FILE) --parents ../Panel/Panel_es_MX.ts $(DISTDIR)/
 	$(COPY_FILE) --parents qmake_qmake_qm_files.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../Panel/MySqlConnection.h ../Panel/mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../Panel/main.cpp ../Panel/mainwindow.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../Panel/mainwindow.ui $(DISTDIR)/
+	$(COPY_FILE) --parents ../Panel/QPgSqlConn.h ../Panel/UsuariosModel.h ../Panel/mainwindow.h ../Panel/registrousuarios.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../Panel/main.cpp ../Panel/mainwindow.cpp ../Panel/registrousuarios.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../Panel/mainwindow.ui ../Panel/registrousuarios.ui $(DISTDIR)/
 	$(COPY_FILE) --parents ../Panel/Panel_es_MX.ts $(DISTDIR)/
 
 
@@ -775,9 +785,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -std=gnu++1z -Wall -Wextra -dM -E -o moc_predefs.h /home/fernando/Qt/5.15.2/gcc_64/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_registrousuarios.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_registrousuarios.cpp
 moc_mainwindow.cpp: ../Panel/mainwindow.h \
 		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QMainWindow \
 		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qmainwindow.h \
@@ -887,18 +897,133 @@ moc_mainwindow.cpp: ../Panel/mainwindow.h \
 		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qicon.h \
 		moc_predefs.h \
 		/home/fernando/Qt/5.15.2/gcc_64/bin/moc
-	/home/fernando/Qt/5.15.2/gcc_64/bin/moc $(DEFINES) --include /home/fernando/Documentos/GitHub/CursoCpp/curso_c/build-Panel-Desktop_Qt_5_15_2_GCC_64bit-Debug/moc_predefs.h -I/home/fernando/Qt/5.15.2/gcc_64/mkspecs/linux-g++ -I/home/fernando/Documentos/GitHub/CursoCpp/curso_c/Panel -I/usr/include/mysql -I/home/fernando/Qt/5.15.2/gcc_64/include -I/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets -I/home/fernando/Qt/5.15.2/gcc_64/include/QtGui -I/home/fernando/Qt/5.15.2/gcc_64/include/QtCore -I. -I/usr/include/c++/10 -I/usr/include/x86_64-linux-gnu/c++/10 -I/usr/include/c++/10/backward -I/usr/lib/gcc/x86_64-linux-gnu/10/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../Panel/mainwindow.h -o moc_mainwindow.cpp
+	/home/fernando/Qt/5.15.2/gcc_64/bin/moc $(DEFINES) --include /home/fernando/Documentos/GitHub/CursoCpp/curso_c/build-Panel-Desktop_Qt_5_15_2_GCC_64bit-Debug/moc_predefs.h -I/home/fernando/Qt/5.15.2/gcc_64/mkspecs/linux-g++ -I/home/fernando/Documentos/GitHub/CursoCpp/curso_c/Panel -I/usr/include/mysql -I/home/fernando/Qt/5.15.2/gcc_64/include -I/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets -I/home/fernando/Qt/5.15.2/gcc_64/include/QtGui -I/home/fernando/Qt/5.15.2/gcc_64/include/QtSql -I/home/fernando/Qt/5.15.2/gcc_64/include/QtCore -I. -I/usr/include/c++/10 -I/usr/include/x86_64-linux-gnu/c++/10 -I/usr/include/c++/10/backward -I/usr/lib/gcc/x86_64-linux-gnu/10/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../Panel/mainwindow.h -o moc_mainwindow.cpp
+
+moc_registrousuarios.cpp: ../Panel/registrousuarios.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QMainWindow \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qmainwindow.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qtguiglobal.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qglobal.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qconfig.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qtcore-config.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qsysinfo.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qlogging.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qflags.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qatomic.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qmutex.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qnumeric.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qversiontagging.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qtgui-config.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qtwidgets-config.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qwidget.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qwindowdefs.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qnamespace.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qwindowdefs_win.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qobject.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qstring.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qchar.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qbytearray.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qrefcount.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qarraydata.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qstringliteral.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qstringview.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qstringbuilder.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qlist.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qalgorithms.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qiterator.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qpair.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qvector.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qcontainertools_impl.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qpoint.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qstringlist.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qregexp.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qcoreevent.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qmetatype.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qobject_impl.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qmargins.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qpaintdevice.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qrect.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qsize.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qpalette.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qcolor.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qrgb.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qrgba64.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qbrush.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qmatrix.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qpolygon.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qregion.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qdatastream.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qiodevice.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qline.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qtransform.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qimage.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qpixelformat.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qpixmap.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qshareddata.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qhash.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qfont.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qfontmetrics.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qfontinfo.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qsizepolicy.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qcursor.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qkeysequence.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qevent.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qvariant.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qmap.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qdebug.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qtextstream.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qlocale.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qset.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qurl.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qurlquery.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qfile.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qfiledevice.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qvector2d.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qtouchdevice.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qtabwidget.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qicon.h \
+		moc_predefs.h \
+		/home/fernando/Qt/5.15.2/gcc_64/bin/moc
+	/home/fernando/Qt/5.15.2/gcc_64/bin/moc $(DEFINES) --include /home/fernando/Documentos/GitHub/CursoCpp/curso_c/build-Panel-Desktop_Qt_5_15_2_GCC_64bit-Debug/moc_predefs.h -I/home/fernando/Qt/5.15.2/gcc_64/mkspecs/linux-g++ -I/home/fernando/Documentos/GitHub/CursoCpp/curso_c/Panel -I/usr/include/mysql -I/home/fernando/Qt/5.15.2/gcc_64/include -I/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets -I/home/fernando/Qt/5.15.2/gcc_64/include/QtGui -I/home/fernando/Qt/5.15.2/gcc_64/include/QtSql -I/home/fernando/Qt/5.15.2/gcc_64/include/QtCore -I. -I/usr/include/c++/10 -I/usr/include/x86_64-linux-gnu/c++/10 -I/usr/include/c++/10/backward -I/usr/lib/gcc/x86_64-linux-gnu/10/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../Panel/registrousuarios.h -o moc_registrousuarios.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: ui_mainwindow.h
+compiler_uic_make_all: ui_mainwindow.h ui_registrousuarios.h
 compiler_uic_clean:
-	-$(DEL_FILE) ui_mainwindow.h
+	-$(DEL_FILE) ui_mainwindow.h ui_registrousuarios.h
 ui_mainwindow.h: ../Panel/mainwindow.ui \
 		/home/fernando/Qt/5.15.2/gcc_64/bin/uic
 	/home/fernando/Qt/5.15.2/gcc_64/bin/uic ../Panel/mainwindow.ui -o ui_mainwindow.h
+
+ui_registrousuarios.h: ../Panel/registrousuarios.ui \
+		/home/fernando/Qt/5.15.2/gcc_64/bin/uic
+	/home/fernando/Qt/5.15.2/gcc_64/bin/uic ../Panel/registrousuarios.ui -o ui_registrousuarios.h
 
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
@@ -1136,14 +1261,196 @@ mainwindow.o: ../Panel/mainwindow.cpp ../Panel/mainwindow.h \
 		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qtouchdevice.h \
 		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qtabwidget.h \
 		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qicon.h \
-		ui_mainwindow.h
+		ui_mainwindow.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/QVariant \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QAction \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qaction.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qactiongroup.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QApplication \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qapplication.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qcoreapplication.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qeventloop.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qguiapplication.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qinputmethod.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QLabel \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qlabel.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qframe.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QLineEdit \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qlineedit.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qtextcursor.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qtextformat.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qpen.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qtextoption.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QMenu \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qmenu.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QMenuBar \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qmenubar.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QPushButton \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qpushbutton.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qabstractbutton.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QStatusBar \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qstatusbar.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QWidget \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QMessageBox \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qmessagebox.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qdialog.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtSql/QSqlQuery \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtSql/qsqlquery.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtSql/qtsqlglobal.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtSql/qtsql-config.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtSql/qsqldatabase.h \
+		../Panel/QPgSqlConn.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtSql/QSqlDatabase \
+		../Panel/registrousuarios.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../Panel/mainwindow.cpp
+
+registrousuarios.o: ../Panel/registrousuarios.cpp ../Panel/registrousuarios.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QMainWindow \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qmainwindow.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qtguiglobal.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qglobal.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qconfig.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qtcore-config.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qsysinfo.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qlogging.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qflags.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qatomic.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qmutex.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qnumeric.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qversiontagging.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qtgui-config.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qtwidgets-config.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qwidget.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qwindowdefs.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qnamespace.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qwindowdefs_win.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qobject.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qstring.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qchar.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qbytearray.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qrefcount.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qarraydata.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qstringliteral.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qstringview.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qstringbuilder.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qlist.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qalgorithms.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qiterator.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qpair.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qvector.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qcontainertools_impl.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qpoint.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qstringlist.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qregexp.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qcoreevent.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qmetatype.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qobject_impl.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qmargins.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qpaintdevice.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qrect.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qsize.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qpalette.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qcolor.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qrgb.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qrgba64.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qbrush.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qmatrix.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qpolygon.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qregion.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qdatastream.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qiodevice.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qline.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qtransform.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qimage.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qpixelformat.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qpixmap.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qshareddata.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qhash.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qfont.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qfontmetrics.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qfontinfo.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qsizepolicy.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qcursor.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qkeysequence.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qevent.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qvariant.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qmap.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qdebug.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qtextstream.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qlocale.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qset.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qurl.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qurlquery.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qfile.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qfiledevice.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qvector2d.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qtouchdevice.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qtabwidget.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qicon.h \
+		ui_registrousuarios.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/QVariant \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QAction \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qaction.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qactiongroup.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QApplication \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qapplication.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qcoreapplication.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtCore/qeventloop.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qguiapplication.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtGui/qinputmethod.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QMenu \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qmenu.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QMenuBar \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qmenubar.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QStatusBar \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qstatusbar.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QWidget \
+		../Panel/QPgSqlConn.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtSql/QSqlDatabase \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtSql/qsqldatabase.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtSql/qtsqlglobal.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtSql/qtsql-config.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/QMessageBox \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qmessagebox.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtWidgets/qdialog.h \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtSql/QSqlQuery \
+		/home/fernando/Qt/5.15.2/gcc_64/include/QtSql/qsqlquery.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o registrousuarios.o ../Panel/registrousuarios.cpp
 
 qrc_qmake_qmake_qm_files.o: qrc_qmake_qmake_qm_files.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_qmake_qmake_qm_files.o qrc_qmake_qmake_qm_files.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
+
+moc_registrousuarios.o: moc_registrousuarios.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_registrousuarios.o moc_registrousuarios.cpp
 
 ####### Install
 

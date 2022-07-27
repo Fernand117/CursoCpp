@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "MySqlConnection.h"
+#include <QMessageBox>
+#include <QtSql/QSqlQuery>
+#include "QPgSqlConn.h"
+#include "registrousuarios.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,33 +20,36 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_btnIniciar_clicked()
 {
-    MYSQL_RES *res;
-    MYSQL_ROW row;
+    QString us = ui->txtUsuario->text();
+    QString ps = ui->txtPassword->text();
+    QString res;
 
-    std::string usuario;
-    char *query;
+    QSqlQuery query("select * from usuarios where usuario = '" + us + "' and password = '" + ps + "' ", getConnectionQSql());
 
-    std::string pq = "select * from usuarios where usuario = '";
-    std::string exq = ui->txtUsuario->text().toStdString().c_str();
-    std::string fq = "'";
+    while (query.next()) {
+        res = query.value(2).toString();
+    }
 
-    std::string q = pq + exq + fq;
-    query = q.c_str();
+    getConnectionQSql().close();
 
-    res = mysqlPerformQuery(getConnectionResult(), query);
-    printf("MySQL Tables in mysql database:\n");
-    while ((row = mysql_fetch_row(res)) !=NULL)
-        usuario = row[1];
-
-    ui->lbResult->setText(usuario.c_str());
-
-    mysql_free_result(res);
-    mysql_close(getConnectionResult());
+    if(res.isEmpty())
+    {
+        QMessageBox::information(this, "Adevertencia", "Este usuario no existe en nuestra base de datos.");
+    }
+    else
+    {
+        QMessageBox::information(this, "Advertencia", "Resultado encontrado.");
+        ui->lbResult->setText(ui->lbResult->text() + " " + res);
+    }
 }
-
 
 void MainWindow::on_actionSalir_triggered()
 {
     MainWindow::close();
 }
 
+void MainWindow::on_btnRegistrar_clicked()
+{
+    RegistroUsuarios *registro = new RegistroUsuarios();
+    registro->show();
+}

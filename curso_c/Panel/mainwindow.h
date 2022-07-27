@@ -20,6 +20,10 @@ private slots:
 
     void on_actionSalir_triggered();
 
+    void on_lbRegistrar_linkActivated(const QString &link);
+
+    void on_btnRegistrar_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

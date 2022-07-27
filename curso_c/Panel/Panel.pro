@@ -1,5 +1,5 @@
 QT       += core gui
-#QT += sql
+QT += sql
 LIBS += -lmariadb
 INCLUDEPATH += /usr/include/mysql/
 
@@ -13,14 +13,18 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    registrousuarios.cpp
 
 HEADERS += \
-    MySqlConnection.h \
-    mainwindow.h
+    QPgSqlConn.h \
+    UsuariosModel.h \
+    mainwindow.h \
+    registrousuarios.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    registrousuarios.ui
 
 TRANSLATIONS += \
     Panel_es_MX.ts
