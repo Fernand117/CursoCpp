@@ -22,6 +22,7 @@ int main()
 
     printf("Bienvenido al sistema de gestión DBZ\n");
     printf("Selecciona una opción para continuar...\n");
+	printf("Probando vídeo y audio de OBS..\n");
 
     return 0;
 }
